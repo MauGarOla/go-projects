@@ -9,14 +9,14 @@ import (
 
 func GetBooks(c *fiber.Ctx) error {
 	var books []models.Book
-	database.DB.Find(&books)
+	database.DB.Preload("Category").Find(&books)
 	return c.JSON(books)
 }
 
 func GetBook(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var book models.Book
-	result := database.DB.First(&book, id)
+	result := database.DB.Preload("Category").First(&book, id)
 	if result.Error != nil {
 		return c.Status(404).JSON(fiber.Map{
 			"message": "Book not found",
